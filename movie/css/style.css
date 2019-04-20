@@ -1,0 +1,239 @@
+@import url(//fonts.googleapis.com/css?family=Open+Sans:600,700);
+html, body { height: 100%; width: 100%; margin: 0; }
+body{
+	/* background-image: url('../../assets/images/backgroud.jpeg'); */
+	background-image: url('https://i.imgur.com/EsBl5A3.jpg');
+	
+	overflow: hidden;
+	font: normal 12px/20px Arial,Helvetica,sans-serif;
+	background-color: #000;
+	margin: 0px;
+	height: 100%;
+	width: 100%;
+	background-repeat: no-repeat;
+	-webkit-background-size: cover;
+	-moz-background-size: cover;
+	-o-background-size: cover;
+	background-size: cover;
+	background-position: center;
+}
+.section_options{
+	width: 100%;
+	bottom: 0px;
+	position: absolute;
+}
+
+.switch_dubSub{
+	margin: 0 auto;
+	width: 360px;
+	padding-bottom: 10px;
+}
+.switch_dubSub span{
+	font-size: 15px;
+}
+.switch_dubSub a{
+	background-color: rgb(0, 255, 198);
+}
+.dubSub_one {
+    color: #FFF;
+    font-size: 17px;
+    font-weight: 500;
+    text-shadow: 0px 0px 4px #000000;
+    padding-bottom: 10px;
+    text-align: center;
+}
+.switchIs_both > div:not(:first-child){
+	display:none;
+}
+.menu_options {
+	padding: 0px;
+	margin: 0px;
+	bottom: 0px;
+	width: 100%;
+	text-align: center;
+	height: 76px;
+	background-color: #262B36;
+	display: table;
+}
+.menu_options div {
+	vertical-align: bottom;
+}
+
+.menu_options div.option {
+	height: 100px;
+	display: inline-flex;
+	-webkit-transform: skew(-15deg);
+	-khtml-transform: skew(-15deg);
+	-moz-transform: skew(-15deg);
+	-ms-transform: skew(-15deg);
+	-o-transform: skew(-15deg);
+	transform: skew(-15deg);
+	cursor: pointer;
+	position: relative;
+	bottom: 0;
+	margin: 0 0 0 -1px;
+	background: black;
+}
+
+.menu_options div.option .icon {
+	width: 112px;
+    height: 100%;
+    background: url('../../assets/images/default_logo.png');
+    background-position: center;
+    background-repeat: no-repeat;
+    margin-left: auto;
+    margin-right: auto;
+    -webkit-transform: skew(15deg);
+    -khtml-transform: skew(15deg);
+    -moz-transform: skew(15deg);
+    -ms-transform: skew(15deg);
+    -o-transform: skew(15deg);
+    transform: skew(15deg);
+}
+
+.menu_options div.option:hover {
+	width: 125px;
+	-webkit-box-shadow: 0px 0px 20px rgba(0,0,0,0.8);
+	-khtml-box-shadow: 0px 0px 20px rgba(0,0,0,0.8);
+	-moz-box-shadow: 0px 0px 20px rgba(0,0,0,0.8);
+	-ms-box-shadow: 0px 0px 20px rgba(0,0,0,0.8);
+	-o-box-shadow: 0px 0px 20px rgba(0,0,0,0.8);
+	box-shadow: 0px 0px 20px rgba(0,0,0,0.8);
+	z-index: 1;
+}
+
+/** new **/
+.section_view {
+	display:none;
+	width: 100%;
+    height: 100%;
+    background: #121121;
+    position: absolute;
+    z-index: 100;
+}
+.menu_view {
+	width: 100%;
+    min-height: 60px;
+    background-color: #262b36;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.menu_view div[role='butback_btn'] {
+	background-image: url('../../assets/images/btn_back.png');
+    width: 65px;
+    height: 100%;
+    background-repeat: no-repeat;
+    background-position: center;
+	background-color:#333641;
+	cursor:pointer;
+	float:left;
+}
+.menu_view div[role='butback_btn']:hover {
+	background-color: #5a5f73;
+}
+.menu_view div[role='butback'] {
+    cursor: pointer;
+    opacity: .8;
+    padding-left: 25px;
+    position: relative;
+    font-size: 18px;
+    font-family: 'Open Sans';
+    color: #fff;
+}
+.menu_view div[role='butback']:hover {
+    opacity: 1;
+}
+.menu_view div[role='butback']::before {
+    width: 20px;
+    height: 20px;
+    display: block;
+    content: "";
+    position: absolute;
+    left: 0;
+    background-image: url('../../assets/images/icon_back.png');
+	top: 1px;
+}
+
+
+.menu_view div[role='title'] {
+	width: calc(100% - 120px);
+    height: 100%;
+    color: white;
+    font-family: OpenSans, Arial, Helvetica, sans-serif;
+    font-size: 20px;
+    font-weight: normal;
+    text-align: center;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+.mainScreen_view{
+	width: 100%;
+	height: calc(100% - 60px);
+	margin: auto;
+	overflow: hidden;
+	margin-top: 0px;
+	position: relative;
+}
+.mainPlayer_view{
+	width: 100%;
+	height: 100%;
+}
+.loading_view{
+	width: 100%;
+	height: 100%;
+	display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.loader{
+	position: relative;
+	font-size: 2em;
+	color: #000;
+	text-transform: uppercase;
+	font-weight: bold;
+	letter-spacing: .5em;
+	padding: 10px;
+}
+.loader span{
+	color: #fff;
+	mix-blend-mode: difference;
+}
+.loader:before{
+	content: "";
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 80px;
+	height: 100%;
+	background-color: #fff;
+	animation: ani 2s linear infinite;
+}
+@keyframes ani{
+	0%{
+		left: 0;
+	}
+	50%{
+		left: calc(100% - 80px);
+	}
+	100%{
+		left: 0;
+	}
+}
+.notification_view{
+	width: 100%;
+	height: 100%;
+	display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.notification_view .text{
+	font-size:3rem;
+	color:#00bc8c; 
+}
+.notification_view .text.error{
+	font-size:3rem;
+	color:#f34646; 
+}
