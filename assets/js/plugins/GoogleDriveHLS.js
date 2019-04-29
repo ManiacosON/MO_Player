@@ -21,9 +21,8 @@
 			
 			m3u8_playlist = plugin.create_M3U8Playlist(m3u8_playlist);
 			
-			
 			/***/
-			var get_contents = function(url) {
+			var get_segment = function(url) {
 				return new Promise(function(resolve, reject) {
 					var xhr = new XMLHttpRequest();
 					xhr.open('GET', url, true);
@@ -36,7 +35,6 @@
 				});
 			}
 			/***/
-			
 			
 			//create hook(proxy)
 			pharPlugin.OnHlsLoad = function(Ihls){
@@ -59,15 +57,16 @@
 							}else if(response.file){
 								var uri = response.file;
 								if(uri.includes('lh3.googleusercontent.com') === true){
-									console.log('oi');
-									get_contents(uri).then(
+									get_segment(uri).then(
 										function(result){
 											var file = window.URL.createObjectURL( new Blob([result.response], {type: 'application/octet-stream'}) );
 											//save segment
 											plugin._segments[fileId] = file;
 											setSegmentURI(file)
 										},
-										function(error) { console.log('error'); }
+										function(error) {
+											pInstance.playerError('Ocorreu um erro ao tentar obter o segmento!<br><small>'+fileId+'</small><br>(???)<br>Tente limpar o cache do seu navegador!');
+										}
 									);
 									
 									
