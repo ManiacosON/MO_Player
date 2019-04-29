@@ -22,66 +22,77 @@
 			m3u8_playlist = plugin.create_M3U8Playlist(m3u8_playlist);
 			
 			
-			var file = window.URL.createObjectURL( new Blob([m3u8_playlist], {type: 'application/x-mpegURL'}) );
-			pInstance.playerSettings['sources'].push({
-				'file': file,
-				'type': 'hls',
-				onXhrOpen: function(xhr, url) {
-					if(url.includes('gdrivehls://') === true){
-						var fileId = url;
-						var callSend = 0;
-						{
-							var Headers = [];
-							var oldsetRequestHeader = xhr.setRequestHeader;
-							xhr.setRequestHeader = function(name, value){
-								Headers[name] = value;
-							}
-						}
-						{
-							xhr.open('GET', null, true);
-							var oldSend = xhr.send;
-							var setSegmentURI = function(uri){
-								xhr.open('GET', uri, true);
-								xhr.send();
-							}
-							xhr.send = function(){
-								callSend++
-								if(callSend >= 2){
-									for (i in Headers){
-										oldsetRequestHeader.call(xhr, i, Headers[i]);
-									}
-									oldSend.apply(xhr, arguments);
-								}
-							};
-						}
-						
-						var fileCache = plugin._segments[fileId] !== undefined?plugin._segments[fileId]:false
-						if(fileCache == false){
-							var data = {};
-							data.id = fileId;
-							PhantomAPI.req('get_segment', data, function(_xhr){
-								var response = _xhr.responseJson;
-								if(response.error){
-									pInstance.playerError('Ocorreu um erro ao tentar obter o segmento!<br><small>'+fileId+'</small><br>('+response.error+')');
-								}else if(response.file){
+			/***/
+			var get_contents = function(url) {
+				return new Promise(function(resolve, reject) {
+					var xhr = new XMLHttpRequest();
+					xhr.open('GET', url, true);
+					xhr.responseType = 'arraybuffer';
+					xhr.onload = function(){
+						resolve(xhr);
+					};
+					xhr.onerror = reject;
+					xhr.send();
+				});
+			}
+			/***/
+			
+			
+			//create hook(proxy)
+			pharPlugin.OnHlsLoad = function(Ihls){
+				if(Ihls.context.url.includes('gdrivehls://') === true){
+					var setSegmentURI = function(url){
+						Ihls.context.url = url;
+						Ihls.loadInternal();
+						console.log(Ihls);
+					}
+					var fileId = Ihls.context.url;
+					
+					var fileCache = plugin._segments[fileId] !== undefined?plugin._segments[fileId]:false
+					if(fileCache === false){
+						var data = {};
+						data.id = fileId;
+						PhantomAPI.req('get_segment', data, function(_xhr){
+							var response = _xhr.responseJson;
+							if(response.error){
+								pInstance.playerError('Ocorreu um erro ao tentar obter o segmento!<br><small>'+fileId+'</small><br>('+response.error+')');
+							}else if(response.file){
+								var uri = response.file;
+								if(uri.includes('lh3.googleusercontent.com') === true){
+									console.log('oi');
+									get_contents(uri).then(
+										function(result){
+											var file = window.URL.createObjectURL( new Blob([result.response], {type: 'application/octet-stream'}) );
+											//save segment
+											plugin._segments[fileId] = file;
+											setSegmentURI(file)
+										},
+										function(error) { console.log('error'); }
+									);
+									
+									
+								}else{
 									//save segment
 									plugin._segments[fileId] = response.file;
 									setSegmentURI(response.file);
-								}else{
-									pInstance.playerError('Ocorreu um erro ao tentar obter o segmento!<br><small>'+fileId+'</small><br>(???)<br>Tente limpar o cache do seu navegador!');
 								}
-							});
-						}else{
-							setSegmentURI(fileCache);
-						}
+							}else{
+								pInstance.playerError('Ocorreu um erro ao tentar obter o segmento!<br><small>'+fileId+'</small><br>(???)<br>Tente limpar o cache do seu navegador!');
+							}
+						});
+					}else{
+						setSegmentURI(fileCache);
 					}
-				}
-			});
-
+				}else
+				Ihls.loadInternal();
+			}
+			
+			
+			
+			var file = window.URL.createObjectURL( new Blob([m3u8_playlist], {type: 'application/x-mpegURL'}) );
+			pharPlugin.player_addSource(file, 'hls', 'hls', true);
 			pInstance.load_player();
 			
-
-
 		}, function(){
 			pInstance.playerError('Não foi possivel Obter o Json do arquivo! (gd_hls 0x0)');
 		});
