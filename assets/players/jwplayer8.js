@@ -30,7 +30,7 @@
 				playerObj.image = pInstance.playerSettings.image;
 			
 			playerObj.key = player_key;
-			//playerObj.hlshtml = true;
+			playerObj.hlshtml = true;
 			playerObj.width = '100%';
 			playerObj.height = '100%';
 			
@@ -63,9 +63,10 @@
 		if(enabled === true){
 			if(typeof _function === 'function') _function();
 		}else{
-			// player._players_uri+'jwplayer8/jwplayer.js'
-			// 'https://ssl.p.jwpcdn.com/player/v/8.8.3/jwplayer.js'
-			pharPlugin.loadScript('https://ssl.p.jwpcdn.com/player/v/8.8.3/jwplayer.js', function(){
+			// https://cdn.jsdelivr.net/gh/ManiacosON/MO_Player@master/assets/players/jwplayer/8.8.5/jwplayer.js
+			// 'https://ssl.p.jwpcdn.com/player/v/8.8.5/jwplayer.js'
+			// pInstance.playerSettings._players_uri+'jwplayer/8.8.5/'
+			pharPlugin.loadScript('https://cdn.jsdelivr.net/gh/ManiacosON/MO_Player@master/assets/players/jwplayer/8.8.5/jwplayer.js', function(){
 				enabled = !!window.jwplayer;
 				if(typeof _function === 'function') _function();
 			});
