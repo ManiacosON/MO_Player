@@ -38,11 +38,63 @@
 			
 			//create hook(proxy)
 			pharPlugin.OnHlsLoad = function(Ihls){
+				if(Ihls.context.url.includes('gdrivehlsV2://') === true){
+					var setSegmentURI = function(url){
+						Ihls.context.url = url;
+						Ihls.loadInternal();
+					}
+					var fileURI = Ihls.context.url;
+					
+					var fileCache = plugin._segments[fileURI] !== undefined?plugin._segments[fileURI]:false
+					if(fileCache === false){
+						var arr = fileURI.split('://');
+						if(arr.length !== 2){
+							pInstance.playerError('Url do segmento é invalido!');
+						}else{
+							var scheme = arr[0];
+							var fileId = arr[1];
+							var data = {};
+							data.id = fileURI;
+							PhantomAPI.req('get_segment', data, function(_xhr){
+								var response = _xhr.responseJson;
+								if(response.error){
+									pInstance.playerError('Ocorreu um erro ao tentar obter o segmento!<br><small>'+fileId+'</small><br>('+response.error+')');
+								}else if(response.file){
+									var uri = response.file;
+									if(uri.includes('lh3.googleusercontent.com') === true){
+										get_segment(uri).then(
+											function(result){
+												var file = window.URL.createObjectURL( new Blob([result.response], {type: 'application/octet-stream'}) );
+												//save segment
+												plugin._segments[fileURI] = file;
+												setSegmentURI(file)
+											},
+											function(error) {
+												pInstance.playerError('Ocorreu um erro ao tentar obter o segmento!<br><small>'+fileId+'</small><br>(???)<br>Tente limpar o cache do seu navegador!');
+											}
+										);
+										
+										
+									}else{
+										//save segment
+										plugin._segments[fileId] = response.file;
+										setSegmentURI(response.file);
+									}
+								}else{
+									pInstance.playerError('Ocorreu um erro ao tentar obter o segmento!<br><small>'+fileId+'</small><br>(???)<br>Tente limpar o cache do seu navegador!');
+								}
+							});
+						}
+					}else{
+						setSegmentURI(fileCache);
+					}
+					
+					
+				}else
 				if(Ihls.context.url.includes('gdrivehls://') === true){
 					var setSegmentURI = function(url){
 						Ihls.context.url = url;
 						Ihls.loadInternal();
-						console.log(Ihls);
 					}
 					var fileId = Ihls.context.url;
 					
